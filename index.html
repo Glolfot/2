@@ -26,7 +26,8 @@
         .tab-content.active { display: block; }
         #user-list { margin-top: 20px; }
         .user { display: flex; align-items: center; margin: 10px 0; }
-        .user img { width: 50px; height: 50px; border-radius: 50%; margin-right: 10px; }
+        .user img { width: 50px; height: 50px; border-radius: 50%; margin-right: 10px; display: block;}
+        .user strong {margin-right: 5px}
     </style>
 </head>
 <body>
@@ -64,7 +65,7 @@
         document.getElementById(tabId).classList.add('active');
 
         if (tabId === 'viewUsers') {
-          displayUsers(); // Update users list when switching to View Users
+          displayUsers();
          }
       });
     });
@@ -80,13 +81,18 @@
             const reader = new FileReader();
 
             reader.onload = function(event) {
+              if (event.target && event.target.result) { //Проверка на валидность результата загрузки файла
                 const user = { name, dob, avatar: event.target.result };
                 users.push(user);
                 displayUsers();
+                clearInputs();
+              } else {
+                alert("Ошибка при загрузке аватара.")
+              }
+
             };
 
             reader.readAsDataURL(avatarFile);
-            clearInputs();
         } else {
             alert('Пожалуйста, заполните все поля.');
         }
@@ -94,12 +100,12 @@
 
     function displayUsers() {
         const userList = document.getElementById('user-list');
-        userList.innerHTML = ''; 
+        userList.innerHTML = '';
         users.forEach(user => {
             const userDiv = document.createElement('div');
             userDiv.className = 'user';
             userDiv.innerHTML = `<img src="" alt="Аватарка">
-                                <strong>${user.name}</strong> (${user.dob})`;
+                                <strong >${user.name}</strong> (${user.dob})`;
             userList.appendChild(userDiv);
         });
     }
